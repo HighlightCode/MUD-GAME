@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="BasicLib">
+      <UniqueIdentifier>{2d077813-962f-4a24-929c-8730d599aa5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadLib">
+      <UniqueIdentifier>{8ddbd4e7-4098-4143-8bd6-c802183ca5aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SocketLib">
+      <UniqueIdentifier>{cf7b01c2-8b1b-43bc-8b40-06a7c7fe910c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MUD-GAME.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\BasicLib\BasicLibString.cpp">
+      <Filter>BasicLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\SocketLib\SocketLibErrors.cpp">
+      <Filter>SocketLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\SocketLib\SocketLibSocket.cpp">
+      <Filter>SocketLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\SocketLib\SocketLibSystem.cpp">
+      <Filter>SocketLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\BasicLib\BasicLibTime.cpp">
+      <Filter>BasicLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\BasicLib\BasicLibRandom.cpp">
+      <Filter>BasicLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\ThreadLib\ThreadLibFunctions.cpp">
+      <Filter>ThreadLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Libraries\BasicLib\BasicLib.h">
+      <Filter>BasicLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\BasicLib\BasicLibString.h">
+      <Filter>BasicLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\BasicLib\BasicLibTypes.h">
+      <Filter>BasicLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLib.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibTypes.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibErrors.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibSocket.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibSystem.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\BasicLib\BasicLibTime.h">
+      <Filter>BasicLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\BasicLib\BasicLibFunctions.h">
+      <Filter>BasicLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\BasicLib\BasicLibRandom.h">
+      <Filter>BasicLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\ThreadLib\ThreadLib.h">
+      <Filter>ThreadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\ThreadLib\ThreadLibException.h">
+      <Filter>ThreadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\ThreadLib\ThreadLibFunctions.h">
+      <Filter>ThreadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\ThreadLib\ThreadLibMutex.h">
+      <Filter>ThreadLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
