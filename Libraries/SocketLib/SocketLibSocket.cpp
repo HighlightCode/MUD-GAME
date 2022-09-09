@@ -267,4 +267,49 @@ namespace SocketLib
 		m_listening = false;
 	}
 
+#ifdef WIN32
+	IocpCore::IocpCore()
+	{
+		_iocpHandle = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
+	}
+
+	IocpCore::~IocpCore()
+	{
+		::CloseHandle(_iocpHandle);
+	}
+
+	bool IocpCore::Register(IocpObject* iocpObject)
+	{
+		return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, /*key*/0, 0);
+	}
+
+	bool IocpCore::Dispatch(int timeoutMs)
+	{
+		DWORD numOfBytes = 0;
+		ULONG_PTR key = 0;
+		IocpEventType* iocpEvent = nullptr;
+
+		if (::GetQueuedCompletionStatus(_iocpHandle, OUT & numOfBytes, OUT & key, OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
+		{
+			IocpObject iocpObject = iocpEvent->owner;
+			iocpObject->Dispatch(iocpEvent, numOfBytes);
+		}
+		else
+		{
+			int errCode = ::WSAGetLastError();
+			switch (errCode)
+			{
+			case WAIT_TIMEOUT:
+				return false;
+			default:
+				// TODO : ·Î±× Âï±â
+				IocpObject piocpObject = iocpEvent->owner;
+				iocpObject->Dispatch(iocpEvent, numOfBytes);
+				break;
+			}
+		}
+
+		return true;
+	}
+#endif
 }

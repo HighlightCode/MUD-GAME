@@ -7,6 +7,48 @@
 
 namespace SocketLib
 {
+#ifdef WIN32
+	enum class IocpEventType {
+		AcceptEvent,
+		SendEvent,
+		RecvEvent
+	};
+
+	typedef struct {
+		OVERLAPPED overlapped;
+		IocpEventType event;
+	} OverLappedEx;
+
+	/*---------------------
+	*	 IocpObject
+	---------------------*/
+	class IocpObject 
+	{
+	public:
+		virtual HANDLE GetHandle() abstract;
+		virtual void Dispatch(class IocpEvent* iocpEvent, int numOfBytes = 0) abstract;
+	};
+
+	/*-----------------------
+	*		IocpCore
+	------------------------*/
+	class IocpCore
+	{
+	public:
+		IocpCore();
+		~IocpCore();
+
+		HANDLE		GetHandle() { return _iocpHandle; }
+
+		bool		Register(IocpObject* iocpObject);
+		bool		Dispatch(int timeoutMs = INFINITE);
+
+	private:
+		HANDLE		_iocpHandle;
+	};
+#else
+
+#endif
 	/*---------------------------
 	*		Basic Socket
 	-----------------------------*/
