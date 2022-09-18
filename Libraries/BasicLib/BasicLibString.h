@@ -33,7 +33,75 @@ namespace BasicLib
     inline void insert(std::ostream& os, const T& t) { os << t; }
 
     template <typename T>
-    inline T& extract(std::istream& is, T& t) { is >> t; }
+    inline T& extract(std::istream& is, T& t) { is >> t; return t; }
+
+    template<>
+    inline sint64& extract<sint64>(std::istream& s, sint64& n)
+    {
+        // skip whitespace if needed
+        if (s.flags() & std::ios::skipws)
+            s >> std::ws;
+
+        // make sure that the number exists, or else it's a read error
+        if (s.peek() != '-' && !isdigit(s.peek()))
+        {
+            s.setstate(s.failbit);
+            return n;
+        }
+
+
+        std::string str;
+        char c;
+
+        // read in the minus if it exists
+        if (s.peek() == '-')
+        {
+            s >> c;
+            str += c;
+        }
+
+        // continue reading digits
+        while (isdigit(s.peek()))
+        {
+            s >> c;
+            str += c;
+        }
+
+        n = _atoi64(str.c_str());
+
+        return n;
+    }
+
+
+
+    template<>
+    inline uint64& extract<uint64>(std::istream& s, uint64& n)
+    {
+        // skip whitespace if needed
+        if (s.flags() & std::ios::skipws)
+            s >> std::ws;
+
+        // make sure that the number exists, or else it's a read error
+        if (!isdigit(s.peek()))
+        {
+            s.setstate(s.failbit);
+            return n;
+        }
+
+        char c;
+        uint64 t = 0;
+
+        // continue reading digits
+        while (isdigit(s.peek()))
+        {
+            s >> c;
+            t = t * 10 + (c - '0');
+        }
+
+        n = t;
+
+        return n;
+    }
 
 #ifdef CRAPPYCOMPILER
 

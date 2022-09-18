@@ -24,7 +24,7 @@ namespace BasicLib
 	/*--------------------------------------------------------------
 	*		Print Time in format YYYY:MM:DD format
 	---------------------------------------------------------------*/
-	std::string DataStamp();
+	std::string DateStamp();
 
 	/*---------------------
 	*	Timer Class

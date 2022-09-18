@@ -2,11 +2,11 @@
 
 namespace ThreadLib
 {
-#ifdef WIN32
+#ifdef _WIN32
     std::map< DWORD, HANDLE > g_handlemap;
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
     DWORD WINAPI DummyRun(void* p_data)
 #else
     void* DummyRun(void* p_data)

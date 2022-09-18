@@ -23,19 +23,19 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{eb1254c0-91ac-4be1-a827-1604e0755b68}</ProjectGuid>
     <RootNamespace>MUDGAME</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files\MySQL\MySQL Server 5.7\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\MySQL\MySQL Server 5.7\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,16 +141,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\DataBasePointer.cpp" />
+    <ClCompile Include="Game\Enemy.cpp" />
+    <ClCompile Include="Game\EnemyDataBase.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Game\ItemDataBase.cpp" />
+    <ClCompile Include="Game\Logon.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\PlayerDataBase.cpp" />
+    <ClCompile Include="Game\Room.cpp" />
+    <ClCompile Include="Game\RoomDataBase.cpp" />
     <ClCompile Include="Libraries\BasicLib\BasicLibRandom.cpp" />
     <ClCompile Include="Libraries\BasicLib\BasicLibString.cpp" />
     <ClCompile Include="Libraries\BasicLib\BasicLibTime.cpp" />
     <ClCompile Include="Libraries\SocketLib\SocketLibErrors.cpp" />
     <ClCompile Include="Libraries\SocketLib\SocketLibSocket.cpp" />
     <ClCompile Include="Libraries\SocketLib\SocketLibSystem.cpp" />
+    <ClCompile Include="Libraries\SocketLib\SocketLibTelnet.cpp" />
+    <ClCompile Include="Libraries\SocketLib\SocketLibWindows.cpp" />
     <ClCompile Include="Libraries\ThreadLib\ThreadLibFunctions.cpp" />
     <ClCompile Include="MUD-GAME.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Attributes.h" />
+    <ClInclude Include="Game\DataBasePointer.h" />
+    <ClInclude Include="Game\Enemy.h" />
+    <ClInclude Include="Game\EnemyDataBase.h" />
+    <ClInclude Include="Game\Entity.h" />
+    <ClInclude Include="Game\EntityDataBase.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\Item.h" />
+    <ClInclude Include="Game\ItemDataBase.h" />
+    <ClInclude Include="Game\Logon.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\PlayerDataBase.h" />
+    <ClInclude Include="Game\Room.h" />
+    <ClInclude Include="Game\RoomDataBase.h" />
+    <ClInclude Include="Game\Utils.h" />
     <ClInclude Include="Libraries\BasicLib\BasicLib.h" />
     <ClInclude Include="Libraries\BasicLib\BasicLibFunctions.h" />
     <ClInclude Include="Libraries\BasicLib\BasicLibRandom.h" />
@@ -156,14 +185,21 @@
     <ClInclude Include="Libraries\BasicLib\BasicLibTime.h" />
     <ClInclude Include="Libraries\BasicLib\BasicLibTypes.h" />
     <ClInclude Include="Libraries\SocketLib\SocketLib.h" />
+    <ClInclude Include="Libraries\SocketLib\SocketLibConnection.h" />
+    <ClInclude Include="Libraries\SocketLib\SocketLibConnectionHandler.h" />
+    <ClInclude Include="Libraries\SocketLib\SocketLibConnectionManager.h" />
     <ClInclude Include="Libraries\SocketLib\SocketLibErrors.h" />
+    <ClInclude Include="Libraries\SocketLib\SocketLibListeningManager.h" />
     <ClInclude Include="Libraries\SocketLib\SocketLibSocket.h" />
     <ClInclude Include="Libraries\SocketLib\SocketLibSystem.h" />
+    <ClInclude Include="Libraries\SocketLib\SocketLibTelnet.h" />
     <ClInclude Include="Libraries\SocketLib\SocketLibTypes.h" />
+    <ClInclude Include="Libraries\SocketLib\SocketLibWindows.h" />
     <ClInclude Include="Libraries\ThreadLib\ThreadLib.h" />
     <ClInclude Include="Libraries\ThreadLib\ThreadLibException.h" />
     <ClInclude Include="Libraries\ThreadLib\ThreadLibFunctions.h" />
     <ClInclude Include="Libraries\ThreadLib\ThreadLibMutex.h" />
+    <ClInclude Include="MyUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

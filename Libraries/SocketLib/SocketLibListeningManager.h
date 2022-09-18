@@ -1,230 +1,184 @@
-#ifndef CONNECTIONMANAGER_H
-#define CONNECTIONMANAGER_H
+#ifndef LISTENINGMANAGER_H
+#define LISTENINGMANAGER_H
 
-#include <list>
-#include <iostream>
-
-#include "ThreadLib/ThreadLib.h"
 #include "SocketLibTypes.h"
+#include "SocketLibSocket.h"
 #include "SocketLibErrors.h"
-#include "SocketSet.h"
-#include "Connection.h"
+#include "SocketLibConnectionManager.h"
+#include <vector>
+#include <thread>
 
 namespace SocketLib
 {
-    template<typename protocol>
-    class Connection;
+	// Forward declarations
+	template<typename protocol, typename defaulthandler>
+	class ConnectionManager;
 
-    /*------------------------------
-    *   Connection Manager
-    -------------------------------*/
-    template<typename protocol, typename defaulthandler>
-    class ConnectionManager
-    {
+	template<typename protocol, typename defaulthandler>
+	class ListeningManager
+	{
+	public:
+		ListeningManager();
 
-        typedef                 std::list< Connection<protocol> >           clist;
-        typedef typename    std::list< Connection<protocol> >::iterator clistitr;
+		~ListeningManager();
 
-    public:
+		void AddPort(port p_port);
 
-        ConnectionManager(int p_maxdatarate = 1024,
-            int p_sentimeout = 60,
-            int p_maxbuffered = 8192);
+		void SetConnectionManager(ConnectionManager<protocol, defaulthandler>* p_manager);
 
-        ~ConnectionManager();
+		void Listen();
 
-        void NewConnection(DataSocket& p_socket);
+	protected:
 
+		//SocketSet m_set;
 
-        inline int AvailableConnections() const
-        {
-            return MAX - (int)m_connections.size();
-        }
+#ifdef _WIN32
+		std::thread					mAcceptThread;
 
-        inline int TotalConnections() const
-        {
-            return (int)m_connections.size();
-        }
+		HANDLE						mIOCPHandle;
 
-        void CloseConnections();
+		bool							mIsAccepterRun = true;
 
-        void Listen();
+		ListeningSocket			mListeningsock;
 
-        void Send();
+		bool							BindIOCompletionPort(Context* _contextHandle);
 
-        inline void Manage()
-        {
-            Listen();
-            Send();
-            CloseConnections();
-        }
+		bool							CreateAccepterThread();
 
-    protected:
-        void Close(clistitr p_itr);
+		void							AcceptThread();
 
-    protected:
+#endif
+		ConnectionManager<protocol, defaulthandler>* m_manager;
+	};
 
-        clist m_connections;
+	template<typename protocol, typename defaulthandler>
+	ListeningManager<protocol, defaulthandler>::ListeningManager()
+	{
+		m_manager = nullptr;
 
-        int m_maxdatarate;
+#ifdef _WIN32
+		mIOCPHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, MAX_WORKERTHREAD);
+		
+		if (NULL == mIOCPHandle)
+		{
+			throw Exception(GetError());
+		}
 
-        int m_sendtimeout;
+		mIsAccepterRun = true;
 
-        int m_maxbuffered;
+		printf("[INFO] SERVER STARTED WITH %d NUMBER CLIENT \n", MAX_CLIENTNUM);
+#else
 
-        SocketSet m_set;
-    };
+#endif
+	}
 
-    template<typename protocol, typename defaulthandler>
-    ConnectionManager<protocol, defaulthandler>::
-        ConnectionManager(int p_maxdatarate,
-            int p_sentimeout,
-            int p_maxbuffered)
-    {
-        m_maxdatarate = p_maxdatarate;
-        m_sendtimeout = p_sentimeout;
-        m_maxbuffered = p_maxbuffered;
-    }
+	template<typename protocol, typename defaulthandler>
+	ListeningManager<protocol, defaulthandler>::~ListeningManager()
+	{
+#ifdef _WIN32
+		CloseHandle(mIOCPHandle);
+		WSACleanup();
+		mIsAccepterRun = false;
 
-    template<typename protocol, typename defaulthandler>
-    ConnectionManager<protocol, defaulthandler>::~ConnectionManager()
-    {
-        clistitr itr;
+		// Destroy Accept Thread
+		if (mAcceptThread.joinable())
+		{
+			mAcceptThread.join();
+		}
 
-        for (itr = m_connections.begin(); itr != m_connections.end(); ++itr)
-            itr->CloseSocket();
-    }
+		printf("[INFO] DESTROY THREAD SUCCESSFULLY \n");
+#endif
+	}
 
+	template<typename protocol, typename defaulthandler>
+	void ListeningManager<protocol, defaulthandler>::AddPort(port p_port)
+	{
+		mListeningsock.Listen(p_port);
+		
+		bool bRet = CreateAccepterThread();
 
-    template<typename protocol, typename defaulthandler>
-    void ConnectionManager<protocol, defaulthandler>::
-        NewConnection(DataSocket& p_socket)
-    {
+		if (false == bRet)
+		{
+			printf("[INFO] SERVER FAILED \n");
+		}
 
-        Connection<protocol> conn(p_socket);
+		//m_sockets.push_back(mListeningsock);
 
-        if (AvailableConnections() == 0)
-        {
-            defaulthandler::NoRoom(conn);
+		//m_set.AddSocket(lsock);
+	}
 
-            conn.CloseSocket();
-        }
-        else
-        {
-            m_connections.push_back(conn);
-
-            Connection<protocol>& c = *m_connections.rbegin();
-
-            c.SetBlocking(false);
-
-            m_set.AddSocket(c);
-
-            c.AddHandler(new defaulthandler(c));
-
-        }
-    }
+	template<typename protocol, typename defaulthandler>
+	void ListeningManager<protocol, defaulthandler>::
+		SetConnectionManager(ConnectionManager<protocol, defaulthandler>* p_manager)
+	{
+		m_manager = p_manager;
+		m_manager->SetIOCPHandle(mIOCPHandle);
+	}
 
 
-    template<typename protocol, typename defaulthandler>
-    void ConnectionManager<protocol, defaulthandler>::Close(clistitr p_itr)
-    {
-        m_set.RemoveSocket(*p_itr);
+	template<typename protocol, typename defaulthandler>
+	void ListeningManager<protocol, defaulthandler>::Listen()
+	{
+#ifdef _WIN32
+		//mListeningsock.StartServer();
+#endif
+	}
 
-        p_itr->CloseSocket();
+	template<typename protocol, typename defaulthandler>
+	bool ListeningManager<protocol, defaulthandler>::BindIOCompletionPort(Context* _contextHandle)
+	{
+		auto hIOCP = ::CreateIoCompletionPort((HANDLE)_contextHandle->socket
+			, mIOCPHandle
+			, (ULONG_PTR)(_contextHandle), 0);
 
-        m_connections.erase(p_itr);
-    }
+		if (NULL == hIOCP || mIOCPHandle != hIOCP)
+		{
+			throw Exception(GetError());
+			return false;
+		}
 
+		return true;
+	}
+	template<typename protocol, typename defaulthandler>
+	bool ListeningManager<protocol, defaulthandler>::CreateAccepterThread()
+	{
+		mAcceptThread = std::thread([this]() {AcceptThread(); });
 
-    template<typename protocol, typename defaulthandler>
-    void ConnectionManager<protocol, defaulthandler>::Listen()
-    {
-        int socks = 0;
-        if (TotalConnections() > 0)
-        {
-            socks = m_set.Poll();
-        }
+		printf("[INFO] ACCEPT THREAD INITIALIZED \n");
 
-        if (socks > 0)
-        {
-            clistitr itr = m_connections.begin();
-            clistitr c;
+		return true;
+	}
+	template<typename protocol, typename defaulthandler>
+	void ListeningManager<protocol, defaulthandler>::AcceptThread()
+	{
+		int nAddrLen = sizeof(SOCKADDR_IN);
 
-            while (itr != m_connections.end())
-            {
-                c = itr++;
+		while (mIsAccepterRun)
+		{
+			sock s;
+			struct sockaddr_in socketaddress;
 
-                if (m_set.HasActivity(*c))
-                {
-                    try
-                    {
-                        c->Receive();
+			// try to accept a connection
+			socklen_t size = sizeof(struct sockaddr);
+			s = accept(mListeningsock.GetSock(), (struct sockaddr*)&socketaddress, &size);
+			if (INVALID_SOCKET == s)
+			{
+				continue;
+			}
 
-                        if (c->GetCurrentDataRate() > m_maxdatarate)
-                        {
-                            c->Close();
-                            c->Handler()->Flooded();
-                            Close(c);
-                        }
-                    }
-                    catch (...)
-                    {
-                        c->Close();
-                        c->Handler()->Hungup();
-                        Close(c);
-                    }
-                }
-            }
-        }
-    }
+			char clientIP[32] = { 0, };
+			inet_ntop(AF_INET, &(socketaddress.sin_addr), clientIP, 32 - 1);
+			printf("[INFO] IP(%s), PORT(%d) SOCKET ACCEPTED . \n", clientIP, socketaddress.sin_port);
 
-
-    template<typename protocol, typename defaulthandler>
-    void ConnectionManager<protocol, defaulthandler>::Send()
-    {
-        clistitr itr = m_connections.begin();
-        clistitr c;
-
-        while (itr != m_connections.end())
-        {
-            c = itr++;
-
-            try
-            {
-                c->SendBuffer();
-
-                if (c->GetBufferedBytes() > m_maxbuffered ||
-                    c->GetLastSendTime() > m_sendtimeout)
-                {
-                    c->Close();
-                    c->Handler()->Hungup();
-                    Close(c);
-                }
-            }
-            catch (...)
-            {
-                c->Close();
-                c->Handler()->Hungup();
-                Close(c);
-            }
-        }
-    }
-
-
-    template<typename protocol, typename defaulthandler>
-    void ConnectionManager<protocol, defaulthandler>::CloseConnections()
-    {
-        clistitr itr = m_connections.begin();
-        clistitr c;
-
-        while (itr != m_connections.end())
-        {
-            c = itr++;
-
-            if (c->Closed())
-                Close(c);
-        }
-    }
-}
-
+			DataSocket acceptSocket(s);
+			acceptSocket.mIOCPHandle = mIOCPHandle;
+			acceptSocket.m_localInfo = socketaddress;
+			acceptSocket.mContext.socket = s;
+			acceptSocket.mSendContext.socket = s;
+			BindIOCompletionPort(&(acceptSocket.mContext));
+			//acceptSocket.m_connected = true;
+			m_manager->NewConnection(acceptSocket);
+		}
+	}
+}   
 #endif

@@ -3,11 +3,10 @@
 
 
 // Window
-#ifdef WIN32                
+#ifdef _WIN32                 
     #pragma comment(lib,"ws2_32.lib")
     #include <WinSock2.h>
     #include <WS2tcpip.h>
-
 #ifndef socklen_t
     typedef int socklen_t;
 #endif
@@ -26,7 +25,7 @@
 
 namespace SocketLib
 {
-#ifdef WIN32
+#ifdef _WIN32
     typedef SOCKET sock;
 #else
     typedef int sock;

@@ -2,9 +2,9 @@
 #define CONNECTION_H
 
 #include <stack>
-#include "BasicLib/BasicLib.h"
+#include "../BasicLib/BasicLib.h"
 #include "SocketLibTypes.h"
-#include "ConnectionManager.h"
+#include "SocketLibConnectionManager.h"
 #include "SocketLibSocket.h"
 
 namespace SocketLib
@@ -12,9 +12,9 @@ namespace SocketLib
     const static int BUFFERSIZE = 1024;
     const static int TIMECHUNK = 16;
 
-    /*----------------------------------
-    *       Class Connection
-    ------------------------------------*/
+    /*-----------------------
+    *       Connection
+    -------------------------*/
     template< class protocol >
     class Connection : public DataSocket
     {
@@ -49,6 +49,8 @@ namespace SocketLib
         void SendBuffer();
 
         void Receive();
+
+        void Receive(int nBytes);
 
         inline int GetDataRate() const
         {
@@ -111,7 +113,6 @@ namespace SocketLib
             return m_handlerstack.top();
         }
 
-
         void ClearHandlers()
         {
             if (Handler())
@@ -123,8 +124,6 @@ namespace SocketLib
                 m_handlerstack.pop();
             }
         }
-
-
 
     protected:
 
@@ -151,7 +150,6 @@ namespace SocketLib
         bool m_closed;
     };
 
-
     template< class protocol >
     Connection<protocol>::Connection()
     {
@@ -165,7 +163,6 @@ namespace SocketLib
         Initialize();
     }
 
-
     template< class protocol >
     void Connection<protocol>::Initialize()
     {
@@ -174,7 +171,7 @@ namespace SocketLib
         m_lastReceiveTime = 0;
         m_lastSendTime = 0;
         m_checksendtime = false;
-        m_creationtime = BasicLib::GetTimeMS();
+        m_creationtime = BasicLib::GetTimeMs();
         m_closed = false;
     }
 
@@ -185,7 +182,6 @@ namespace SocketLib
         {
             return BasicLib::GetTimeS() - m_lastSendTime;
         }
-
         return 0;
     }
 
@@ -214,11 +210,9 @@ namespace SocketLib
                 {
                     m_checksendtime = true;
                     m_lastSendTime = BasicLib::GetTimeS();
-
                 }
-            }  
-
-        }  
+            }
+        } 
     }
 
     template< class protocol >
@@ -240,6 +234,22 @@ namespace SocketLib
         m_protocol.Translate(*this, m_buffer, bytes);
     }
 
+    template<class protocol>
+    void Connection<protocol>::Receive(int nBytes)
+    {
+        BasicLib::sint64 t = BasicLib::GetTimeS();
+
+        if ((m_lastReceiveTime / TIMECHUNK) != (t / TIMECHUNK))
+        {
+            m_lastdatarate = m_datarate / TIMECHUNK;
+            m_datarate = 0;
+            m_lastReceiveTime = t;
+        }
+
+        m_datarate += nBytes;
+
+        m_protocol.Translate(*this, mContext.mRecvBuf, nBytes);
+    }
 }   
 
 #endif

@@ -1,54 +1,22 @@
 #ifndef SOCKETLIBSOCKET_H
 #define SOCKETLIBSOCKET_H
 
+#include <thread>
+#include <vector>
 #include "../BasicLib/BasicLib.h"
 #include "SocketLibTypes.h"
 #include "SocketLibErrors.h"
 
+#ifdef _WIN32
+	#include "SocketLibWindows.h"
+#endif
+
 namespace SocketLib
 {
-#ifdef WIN32
-	enum class IocpEventType {
-		AcceptEvent,
-		SendEvent,
-		RecvEvent
-	};
+	// forward Declariration
+	template<typename protocol, typename defaulthandler>
+	class ConnectionManager;
 
-	typedef struct {
-		OVERLAPPED overlapped;
-		IocpEventType event;
-	} OverLappedEx;
-
-	/*---------------------
-	*	 IocpObject
-	---------------------*/
-	class IocpObject 
-	{
-	public:
-		virtual HANDLE GetHandle() abstract;
-		virtual void Dispatch(class IocpEvent* iocpEvent, int numOfBytes = 0) abstract;
-	};
-
-	/*-----------------------
-	*		IocpCore
-	------------------------*/
-	class IocpCore
-	{
-	public:
-		IocpCore();
-		~IocpCore();
-
-		HANDLE		GetHandle() { return _iocpHandle; }
-
-		bool		Register(IocpObject* iocpObject);
-		bool		Dispatch(int timeoutMs = INFINITE);
-
-	private:
-		HANDLE		_iocpHandle;
-	};
-#else
-
-#endif
 	/*---------------------------
 	*		Basic Socket
 	-----------------------------*/
@@ -71,6 +39,29 @@ namespace SocketLib
 
 	protected:
 		sock m_sock;
+
+#ifdef _WIN32
+	public:
+		HANDLE		mIOCPHandle;
+
+		Context		mContext;
+
+		Context		mSendContext;
+
+		// function for connect iocp handle and socket
+		bool BindIOCompletionPort(Context* _contextHandle);
+
+	public:
+		// Recv Functions For Iocp Event
+		void BindRecv();
+
+		bool SendMsg(const int _dataSize, char* pMsg);
+
+		bool SendIO();
+
+		virtual void Receive() abstract;
+
+#endif
 
 		struct sockaddr_in m_localInfo = {0, };
 
@@ -101,7 +92,10 @@ namespace SocketLib
 
 		void Close();
 
+		virtual void Receive() override { };
+
 	protected:
+
 		bool m_connected;
 
 		struct sockaddr_in m_remoteinfo = { 0, }; // struct containing information about remote connection
@@ -119,14 +113,19 @@ namespace SocketLib
 
 		void Listen(port p_port);
 
-		DataSocket Accept();
-
 		inline bool IsListening() const { return m_listening; }
 
 		void Close();
 
 	protected:
 		bool m_listening;
+
+#ifdef _WIN32
+	public:
+		std::vector<std::thread> mWorkerThreads;
+
+		virtual void Receive() override { };
+#endif
 	};
 }
 

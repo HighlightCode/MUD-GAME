@@ -18,6 +18,33 @@
     <Filter Include="SocketLib">
       <UniqueIdentifier>{cf7b01c2-8b1b-43bc-8b40-06a7c7fe910c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SocketLib\window">
+      <UniqueIdentifier>{96245e05-6074-4e75-a4b4-31fc82c8e28e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SocketLib\linux">
+      <UniqueIdentifier>{f457c6f4-00b0-4f7e-b1e0-619f5a4ad9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{2981a91d-fa33-49b3-8a2d-82042c2d67c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Room">
+      <UniqueIdentifier>{71cba503-2e6d-40fb-8c0f-6e58e5eebf98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Player">
+      <UniqueIdentifier>{868df83d-a0c4-4cbc-a78a-36167c068098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Enemy">
+      <UniqueIdentifier>{4fc948ce-915f-4375-92bb-0e87400b76b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Item">
+      <UniqueIdentifier>{41ad8a38-dcf5-489f-9cad-287c3e485cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Game">
+      <UniqueIdentifier>{9f247dd4-d256-4b2b-ae45-1d58dbcf9081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\DataBase">
+      <UniqueIdentifier>{e0db14e3-3636-4c02-9ead-d339f50d161b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MUD-GAME.cpp">
@@ -43,6 +70,42 @@
     </ClCompile>
     <ClCompile Include="Libraries\ThreadLib\ThreadLibFunctions.cpp">
       <Filter>ThreadLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\SocketLib\SocketLibWindows.cpp">
+      <Filter>SocketLib\window</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\SocketLib\SocketLibTelnet.cpp">
+      <Filter>SocketLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RoomDataBase.cpp">
+      <Filter>Game\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Room.cpp">
+      <Filter>Game\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\PlayerDataBase.cpp">
+      <Filter>Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Player.cpp">
+      <Filter>Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EnemyDataBase.cpp">
+      <Filter>Game\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ItemDataBase.cpp">
+      <Filter>Game\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy.cpp">
+      <Filter>Game\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp">
+      <Filter>Game\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logon.cpp">
+      <Filter>Game\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\DataBasePointer.cpp">
+      <Filter>Game\DataBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +153,72 @@
     </ClInclude>
     <ClInclude Include="Libraries\ThreadLib\ThreadLibMutex.h">
       <Filter>ThreadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibWindows.h">
+      <Filter>SocketLib\window</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibListeningManager.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibConnectionManager.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibConnection.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibTelnet.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\SocketLib\SocketLibConnectionHandler.h">
+      <Filter>SocketLib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Utils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RoomDataBase.h">
+      <Filter>Game\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Room.h">
+      <Filter>Game\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\PlayerDataBase.h">
+      <Filter>Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Player.h">
+      <Filter>Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EnemyDataBase.h">
+      <Filter>Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ItemDataBase.h">
+      <Filter>Game\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Item.h">
+      <Filter>Game\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy.h">
+      <Filter>Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Game.h">
+      <Filter>Game\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logon.h">
+      <Filter>Game\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EntityDataBase.h">
+      <Filter>Game\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Attributes.h">
+      <Filter>Game\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\DataBasePointer.h">
+      <Filter>Game\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Entity.h">
+      <Filter>Game\DataBase</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

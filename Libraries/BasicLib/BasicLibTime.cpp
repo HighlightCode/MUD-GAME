@@ -37,7 +37,7 @@ namespace BasicLib
 		return std::string(buff);
 	}
 
-	std::string DataStamp()
+	std::string DateStamp()
 	{
 		std::time_t result = std::time(nullptr);
 		char buff[20] = { 0, };

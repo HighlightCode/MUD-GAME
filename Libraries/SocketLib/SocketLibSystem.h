@@ -1,6 +1,6 @@
 #ifndef SOCKETLIBSYSTEM_H
 #define SOCKETLIBSYSTEM_H
-#ifdef WIN32
+#ifdef _WIN32
 	#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #endif
 #include <string>

@@ -1,7 +1,7 @@
 #ifndef THREADLIBFUNCTIONS_H
 #define THREADLIBFUNCTIONS_H
 
-#ifdef WIN32
+#ifdef _WIN32 
 	#include <windows.h>
 	#include <map>
 #else                       
@@ -16,7 +16,7 @@ namespace ThreadLib
 	// Thread function pointer
 	typedef void (*ThreadFunc)(void*);
 
-#ifdef WIN32
+#ifdef _WIN32
 	typedef DWORD ThreadID;
 	extern std::map< DWORD, HANDLE > g_handlemap;
 #else
@@ -30,7 +30,7 @@ namespace ThreadLib
 		void* m_data;
 	};
 
-#ifdef WIN32
+#ifdef _WIN32
 	DWORD WINAPI DummyRun(void* p_data);
 #else
 	void* DummyRun(void* p_data);
@@ -43,7 +43,7 @@ namespace ThreadLib
         data->m_func = p_func;
         data->m_data = p_param;
 
-#ifdef WIN32    
+#ifdef _WIN32    
         HANDLE h;
         h = CreateThread(NULL, 0, DummyRun, data, 0, &t);
         if (h != 0)
@@ -64,7 +64,7 @@ namespace ThreadLib
 
     inline ThreadID GetID()
     {
-#ifdef WIN32
+#ifdef _WIN32
         return GetCurrentThreadId();
 #else
         return pthread_self();
@@ -73,7 +73,7 @@ namespace ThreadLib
 
     inline void WaitForFinish(ThreadID p_thread)
     {
-#ifdef WIN32
+#ifdef _WIN32
         WaitForSingleObject(g_handlemap[p_thread], INFINITE);
 
         CloseHandle(g_handlemap[p_thread]);
@@ -86,7 +86,7 @@ namespace ThreadLib
 
     inline void Kill(ThreadID& p_thread)
     {
-#ifdef WIN32
+#ifdef _WIN32
         TerminateThread(g_handlemap[p_thread], 0);
 
         CloseHandle(g_handlemap[p_thread]);
@@ -99,7 +99,7 @@ namespace ThreadLib
 
     inline void YieldThread(int p_milliseconds = 1)
     {
-#ifdef WIN32
+#ifdef _WIN32
         Sleep(p_milliseconds);
 #else
         usleep(p_milliseconds * 1000);
